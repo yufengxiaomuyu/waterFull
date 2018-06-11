@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>瀑布流</title>
+	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<style>
+		.ct {
+			position: relative;
+		}
+		.ct>.item {
+			position: absolute;
+			margin: 5px;
+			width: 200px;
+			color: #fff;
+			transition: all 1s;
+		}
+		.h1 {
+			background-color: red;
+			height: 480px;
+		}
+		.h2 {
+			background-color: green;
+			height: 360px;
+		}
+		.h3 {
+			background-color: black;
+			height: 300px;
+		}
+		.h4 {
+			background-color: blue;
+			height: 420px;
+		}
+	</style>
+</head>
+<body>
+	<div class="ct">
+		<div class="item h1" id="1">1</div>
+		<div class="item h2" id="2">2</div>
+		<div class="item h3" id="3">3</div>
+		<div class="item h4" id="4">4</div>
+		<div class="item h3" id="5">5</div>
+		<div class="item h4" id="6">6</div>
+		<div class="item h3" id="7">7</div>
+		<div class="item h1" id="8">8</div>
+		<div class="item h2" id="9">9</div>
+		<div class="item h4" id="10">10</div>
+		<div class="item h1" id="11">11</div>
+		<div class="item h2" id="12">12</div>
+		<div class="item h4" id="13">13</div>
+		<div class="item h3" id="14">14</div>
+		<div class="item h2" id="15">15</div>
+		<div class="item h1" id="16">16</div>
+	</div>
+	
+	<script>
+		var waterFull = (function(){
+			function init(){
+				var clock;
+				renderhtml();
+				$(window).resize(function(){
+				if (clock) clearTimeout(clock);
+					clock = setTimeout(function(){
+						renderhtml();
+					},300);
+				});
+			};
+			
+			function renderhtml(){
+				var colLength = parseInt($(".ct").width()/$(".item").width()); 
+				var itemArr = [];
+				for (i=0;i<colLength;i++) {
+					itemArr[i] = 0;
+				}
+				$(".item").each(function() {
+					var minValue = Math.min.apply(null,itemArr);
+					var minIndex = itemArr.indexOf(minValue);
+					$(this).css({
+						top: minValue,
+						left: minIndex*$(".item").outerWidth(true)
+					});
+					itemArr[minIndex] += $(this).outerHeight(true);
+				});
+			};
+			return {
+				init: init
+			};
+		})();
+
+		waterFull.init();
+
+	</script>
+</body>
+</html>
